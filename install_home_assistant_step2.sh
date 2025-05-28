@@ -25,10 +25,25 @@ echo "Исправление ошибок установки..."
 sudo apt --fix-broken install
 
 # Настройка Chromium для отображения дашборда Home Assistant на сенсорном дисплее
-echo "Настройка Chromium для отображения дашборда Home Assistant на сенсорном дисплее..."
+# Создание файла run_kiosk.sh
+echo "Создание файла run_kiosk.sh..."
+cat <<EOL > /home/pi/run_kiosk.sh
+#!/bin/bash
+/usr/bin/chromium-browser --start-fullscreen --app=http://localhost:8123 &
+EOL
+
+# Дать права на выполнение файлу run_kiosk.sh
+chmod +x /home/pi/run_kiosk.sh
+
+# Редактирование файла /etc/xdg/labwc/autostart
+echo "Редактирование файла /etc/xdg/labwc/autostart..."
+echo "/home/pi/run_kiosk.sh &" | sudo tee -a /etc/xdg/labwc/autostart
+
+# Настройка Chromium для отображения дашборда Home Assistant на сенсорном дисплее
+#echo "Настройка Chromium для отображения дашборда Home Assistant на сенсорном дисплее..."
 # sudo apt-get install -y chromium-browser
 # mkdir -p ~/.config/lxsession/LXDE-pi
-echo "@chromium-browser --kiosk --incognito --disable-pinch --overscroll-history-navigation=0 http://localhost:8123" > /etc/xdg/lxsession/LXDE-pi/autostart
+#echo "@chromium-browser --kiosk --incognito --disable-pinch --overscroll-history-navigation=0 http://localhost:8123" > /etc/xdg/lxsession/LXDE-pi/autostart
 
 # Перезагрузка системы
 echo "Перезагрузка системы..."
